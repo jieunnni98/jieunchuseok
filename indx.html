@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>추석 체험</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a2e;
+            color: #ffffff;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 100px; /* 토끼를 위한 여백 */
+        }
+        h1, h2 {
+            color: #ffd700;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #4a4e69;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #22223b;
+        }
+        #topic-info, #deokdam-display {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid #4a4e69;
+            border-radius: 5px;
+        }
+        .moon {
+            position: fixed;
+            top: 50px;
+            right: 50px;
+            width: 100px;
+            height: 100px;
+            background-color: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ffd700;
+        }
+        .rabbit {
+            position: fixed;
+            bottom: 20px; /* 위치를 더 아래로 조정 */
+            left: 50px;
+            width: 80px;
+            height: 80px;
+            background-color: #ffffff;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        }
+        .rabbit::before, .rabbit::after {
+            content: '';
+            position: absolute;
+            background-color: #ffffff;
+        }
+        .rabbit::before {
+            top: -20px;
+            left: 15px;
+            width: 20px;
+            height: 40px;
+            border-radius: 50% 50% 0 0;
+            transform: rotate(-30deg);
+        }
+        .rabbit::after {
+            top: -20px;
+            right: 15px;
+            width: 20px;
+            height: 40px;
+            border-radius: 50% 50% 0 0;
+            transform: rotate(30deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="moon"></div>
+    <div class="rabbit"></div>
+    <div class="container">
+        <h1>달토끼와 함께하는 추석 체험</h1>
+        
+        <h2>추석이란?</h2>
+        <p>
+            추석(秋夕)은 한국의 가장 중요한 전통 명절 중 하나로, 음력 8월 15일에 해당해. "한가위"라고도 불리며, 가을의 풍성한 수확을 감사하는 의미를 담고 있어. 농사가 잘 되어 곡식과 과일이 풍성한 가을을 맞아 조상께 감사하고, 가족과 함께 풍요로움을 나누는 날이야.
+        </p>
+        <p>
+            추석에는 주로 차례(Charye)라는 제사를 지내 조상님께 감사의 마음을 전하고, 성묘(Seongmyo)를 하며 조상님의 묘를 찾아가 돌보는 전통도 있어. 가족들이 함께 모여 송편(Songpyeon) 같은 특별한 음식을 만들고, 강강술래(Ganggangsullae)와 같은 전통 놀이를 즐기기도 해.
+        </p>
+        <p>
+            추석은 가족이 한자리에 모여 유대감을 나누고, 조상에 대한 존경과 감사의 의미를 되새기는 명절로, 오랜 세월 동안 한국인들에게 큰 의미를 지니고 있지.
+        </p>
+        
+        <h2>추석 달토끼에게 물어보세요</h2>
+        <div>
+            <button class="topic-btn">송편</button>
+            <button class="topic-btn">차례</button>
+            <button class="topic-btn">성묘</button>
+            <button class="topic-btn">강강술래</button>
+            <button class="topic-btn">한복</button>
+        </div>
+        <div id="topic-info"></div>
+
+        <h2>덕담 나누기</h2>
+        <button id="get-deokdam">새로운 덕담 받기</button>
+        <div id="deokdam-display"></div>
+    </div>
+
+    <script>
+        // 추천 검색어 관련 스크립트
+        const topicButtons = document.querySelectorAll('.topic-btn');
+        const topicInfo = document.getElementById('topic-info');
+
+        const topicData = {
+            '송편': '송편은 추석에 먹는 대표적인 전통 떡으로, 반달 모양을 하고 있습니다. 가족이 모여 함께 만들며 이야기를 나누는 소중한 시간을 보냅니다.',
+            '차례': '차례는 추석에 조상님께 감사의 마음을 전하기 위해 지내는 의식입니다. 가족이 모여 조상님께 예를 표하고 풍요로운 수확에 감사드립니다.',
+            '성묘': '성묘는 추석에 조상의 묘를 찾아가서 돌보는 전통입니다. 묘소를 정리하고 조상님을 기리며 가족의 유대를 다집니다.',
+            '강강술래': '강강술래는 추석 명절에 주로 남쪽 지역에서 행해지는 전통 춤입니다. 여성들이 손을 잡고 원을 그리며 노래하고 춤을 추며 풍년을 기원합니다.',
+            '한복': '한복은 추석에 입는 전통 의상으로, 한국의 대표적인 옷입니다. 아름다운 색상과 선으로 우아함을 표현하며, 명절의 의미를 더합니다.'
+        };
+
+        topicButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const topic = button.textContent;
+                console.log(`${topic} 버튼이 클릭되었습니다.`);
+                topicInfo.textContent = topicData[topic];
+            });
+        });
+
+        // 덕담 나누기 스크립트
+        const deokdamDisplay = document.getElementById('deokdam-display');
+        const getDeokdamBtn = document.getElementById('get-deokdam');
+        const deokdams = [
+            "추석처럼 풍요로운 한 해 되세요!",
+            "가족들과 함께 웃음 가득한 추석 보내세요!",
+            "달처럼 밝고 빛나는 날들만 가득하길 바랄게요!",
+            "달토끼가 지켜보는 만큼, 행복한 일들이 가득할 거예요!",
+            "달빛 아래 소원 하나 빌어보세요, 꼭 이루어질 거예요!",
+            "송편처럼 달콤한 행복이 가득하길 바랍니다.",
+            "보름달처럼 둥글고 풍성한 한 해 되세요!",
+            "추석의 풍요로움이 한 해 내내 함께하길 바랍니다."
+        ];
+
+        function getRandomDeokdam() {
+            const randomIndex = Math.floor(Math.random() * deokdams.length);
+            return deokdams[randomIndex];
+        }
+
+        getDeokdamBtn.addEventListener('click', () => {
+            const newDeokdam = getRandomDeokdam();
+            console.log("새로운 덕담: ", newDeokdam);
+            deokdamDisplay.textContent = newDeokdam;
+        });
+    </script>
+</body>
+</html>
